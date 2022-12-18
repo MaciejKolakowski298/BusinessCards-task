@@ -17,7 +17,19 @@ BusinessCards_list=[Card_1 , Card_2 , Card_3 , Card_4 , Card_5]
 
 for i in BusinessCards_list:
     print(i)
-    
+
+by_name = sorted(BusinessCards_list, key=lambda card: card.name)
+for i in by_name:
+    print(i)  
+
+by_last_name = sorted(BusinessCards_list, key=lambda card: card.last_name)
+for i in by_last_name:
+    print(i) 
+
+by_e_mail = sorted(BusinessCards_list, key=lambda card: card.e_mail)  
+for i in by_e_mail:
+    print(i)
+   
 
 #for i in BusinessCards_list:
     #print(i.name , i.last_name , i.e_mail)

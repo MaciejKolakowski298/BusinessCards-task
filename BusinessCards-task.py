@@ -1,37 +1,50 @@
-class BusinessCards:
-    def __init__(self, name, last_name, company, job_position, e_mail):
+from faker import Faker
+
+class BaseContact:
+    def __init__(self, name, phone, e_mail):
         self.name = name
-        self.last_name = last_name
-        self.company = company
-        self.job_position = job_position
+        self.phone = phone
         self.e_mail = e_mail
-    def __str__(self):
-        return f"{self.name} {self.last_name} , {self.e_mail}"
-Card_1 = BusinessCards(name="Dorota", last_name="Wysocki", company="Poore Simmon's", job_position="Cytotechnologist", e_mail="DorotaWysocki@rhyta.com")
-Card_2 = BusinessCards(name="Józef", last_name="Rutkowski", company="Aronson Furniture", job_position="Greenskeeper", e_mail="JozefRutkowski@rhyta.com")
-Card_3 = BusinessCards(name="Klementyna", last_name="Zając", company="Fellowship Investments", job_position="Braille clerk", e_mail="KlementynaZajac@dayrep.com")
-Card_4 = BusinessCards(name="Lew", last_name="Czarnecki", company="Hastings", job_position="Correctional treatment specialist", e_mail="LewCzarnecki@teleworm.us")
-Card_5 = BusinessCards(name="Racław", last_name="Zawacki", company="Well's And Wade", job_position="Physical therapist assistant", e_mail="RaclawZawacki@jourrapide.com")
 
-BusinessCards_list=[Card_1 , Card_2 , Card_3 , Card_4 , Card_5]
-
-for i in BusinessCards_list:
-    print(i)
-
-by_name = sorted(BusinessCards_list, key=lambda card: card.name)
-for i in by_name:
-    print(i)  
-
-by_last_name = sorted(BusinessCards_list, key=lambda card: card.last_name)
-for i in by_last_name:
-    print(i) 
-
-by_e_mail = sorted(BusinessCards_list, key=lambda card: card.e_mail)  
-for i in by_e_mail:
-    print(i)
+    def contact(self):
+        print(f"Wybieram numer {self.phone} i dzwonię do {self.name}")
    
 
-#for i in BusinessCards_list:
-    #print(i.name , i.last_name , i.e_mail)
+    def __str__(self):
+        return f"{self.name}, {self.phone} , {self.e_mail}"
 
-#print(f"{Card_1.name} {Card_1.last_name} , {Card_1.e_mail}")
+    @property
+    def label_length(self):
+        return len(self.name)
+
+
+class BusinessContact(BaseContact):
+    def __init__(self, name, phone, e_mail, position, company, business_phone):
+        super().__init__(name, phone, e_mail)
+        self.position=position
+        self.company=company
+        self.business_phone=business_phone
+    
+    def contact(self):
+        print(f"Wybieram numer służbowy {self.business_phone} i dzwonię do {self.name}")
+
+def create_contacts(rodzaj, ilość):
+    wizytowki=[]
+    fake=Faker('pl_PL')
+
+    if rodzaj=='BaseContact':
+        for i in range (ilość):
+            wizytowka=BaseContact(fake.name(),fake.phone_number(), fake.email())
+            wizytowki.append(wizytowka)
+    elif rodzaj=='BusinessContact':
+        for i in range (ilość):
+            bwizytowka=BusinessContact(fake.name(), fake.phone_number(), fake.email(), fake.job(), fake.company(), fake.phone_number())
+            wizytowki.append(bwizytowka)
+    return wizytowki
+
+wizytowki=create_contacts('BaseContact', 3)
+wizytowki+=create_contacts('BusinessContact', 3)
+
+for i in wizytowki:
+    i.contact()
+    print('ilość znaków', i.label_length)
